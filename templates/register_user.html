@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    register
+{% endblock %}
+
+
+
+
+{% block content_title %}
+
+New User registration
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<div class=" col-md-6">
+
+    <form id="add_form" method="POST">
+        {% csrf_token %}
+        {{form}}
+        <button form="add_form" type="submit" class="btn btn-primary mt-4" >Create New User</button>
+    </form>
+    
+
+</div>
+
+
+{% endblock %}

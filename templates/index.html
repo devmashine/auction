@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    index
+{% endblock %}
+
+
+
+
+{% block content_title %}
+index
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<p>user.id: {{current_user}}</p>
+
+
+<p>groups_user_buyers: {{groups_user_buyers}}</p>
+<p>groups_user_sellers: {{groups_user_sellers}}</p>
+
+<div id="main_cards" >
+{% for i in auctions_today %}
+
+
+<div class="card mb-3 col-md-8 main_cards" >
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img src="{{ MEDIA_URL }}{{ i.main_img }}" class="card-img" alt="...">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{i.title}} <small class="text-muted mr-3">Status: {{i.status}}</small><small class="text-muted mr-3">ID: {{i.id}}</small></h5>
+        <p class="card-text">{{i.description}}</p>
+        <p class="card-text"><small class="text-muted mr-3">Start auction: {{i.start_auction}}</small>
+          <small class="text-muted mr-3">Start price: {{i.start_price}}</small>
+          <small class="text-muted mr-3">Bid up: {{i.bid_up}}</small>
+        </p>
+        <p class="card-text">
+            <form id="add_form_{{i.id}}" class="form-group" method="POST" data-url="{% url 'index' %}">
+                {% csrf_token %}
+                {{form.bid.label}}
+                {{form.bid}}
+                <select name="auction" required="" id="id_auction" hidden>
+                    <option value="{{i.id}}" selected=""></option>
+                </select>
+
+                <select name="buyer_id" required="" id="id_buyer_id" hidden>
+                    <option value="{{user.id}}" selected=""></option>
+                </select>
+                <button form="add_form_{{i.id}}" data-id="{{i.id}}" id="add_form_btn_{{i.id}}" type="button" class="btn btn-primary" >bid</button>
+
+            </form>
+
+
+        </p>
+
+
+
+        <p class="card-text bid_class" id="bid_list_{{i.id}}">
+            {% for bid in  auction_bids %}
+                {% if bid.auction_id == i.id %}
+                <small>bid: {{bid.bid}} | </small>
+                {% endif %}
+            {% endfor %}
+        </p>
+
+        <h5 class="card-title" >
+          <!-- {{i.start_price}} -->
+
+          {% for p in prices %}
+            {% if p.auction_id == i.id and p.winner == 1%}
+            
+            <p id="actual_price_val_{{i.id}}">actual price: {{p.new_price}}</p>
+            {% endif %}
+          {% endfor %}
+
+
+
+        </h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endfor %}
+
+</div>
+
+{% for i in auctions_tomorrow %}
+
+
+<div class="card mb-3 col-md-8">
+ <div class="row no-gutters">
+   <div class="col-md-4">
+     <img src="{{ MEDIA_URL }}{{ i.main_img }}" class="card-img" alt="...">
+   </div>
+   <div class="col-md-8">
+     <div class="card-body">
+       <h5 class="card-title">{{i.start_auction}}</h5>
+       <h5 class="card-title">{{i.title}} <small class="text-muted mr-3">Status: {{i.status}}</small><small class="text-muted mr-3">ID: {{i.id}}</small></h5>
+       <p class="card-text">{{i.description}}</p>
+        <p class="card-text"><small class="text-muted mr-3">Start auction: {{i.start_auction}}</small>
+         <small class="text-muted mr-3">Start price: {{i.start_price}}</small>
+          <small class="text-muted mr-3">Bid up: {{i.bid_up}}</small>
+        </p>
+      
+     </div>
+   </div>
+</div>
+</div>
+
+
+
+{% endfor %}
+
+
+
+{% for i in auctions_yesterday %}
+
+
+<div class="card mb-3 col-md-8">
+ <div class="row no-gutters">
+   <div class="col-md-4">
+     <img src="{{ MEDIA_URL }}{{ i.main_img }}" class="card-img" alt="...">
+   </div>
+   <div class="col-md-8">
+     <div class="card-body">
+       <h5 class="card-title">yesterday {{i.start_auction}}</h5>
+       <h5 class="card-title">{{i.title}} <small class="text-muted mr-3">Status: {{i.status}}</small><small class="text-muted mr-3">ID: {{i.id}}</small></h5>
+       <p class="card-text">{{i.description}}</p>
+        <p class="card-text"><small class="text-muted mr-3">Start auction: {{i.start_auction}}</small>
+         <small class="text-muted mr-3">Start price: {{i.start_price}}</small>
+          <small class="text-muted mr-3">Bid up: {{i.bid_up}}</small>
+        </p>
+      
+     </div>
+   </div>
+</div>
+</div>
+
+
+
+{% endfor %}
+
+
+
+
+{% endblock %}

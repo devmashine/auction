@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    create auction
+{% endblock %}
+
+
+
+
+{% block content_title %}
+
+
+{{CreateAuction}}
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+
+
+<div class=" col-md-6">
+
+    <form id="add_form" class="form-group" method="POST"  enctype="multipart/form-data">
+        {% csrf_token %}
+
+
+        {{form.title.label}}
+        {{form.title}}
+        {{form.description.label}}
+        {{form.description}}
+        {{form.start_price.label}}
+        {{form.start_price}}
+        {{form.bid_up.label}}
+        {{form.bid_up}}
+        {{form.start_auction.label}}
+        {{form.start_auction}}
+        {{form.main_img.label}}
+        {{form.main_img}}
+        <select name="seller" class="form-control" id="id_seller" hidden>
+          <option value="{{user.id}}" selected=""></option>
+        </select>
+        <input type="number" name="status" class="form-control" id="id_status" value="1" hidden>
+        <input type="number" name="sort_auction" class="form-control" id="id_sort_auction" value="{{user.id}}" hidden>
+
+        <button form="add_form" type="submit" class="btn btn-primary mt-4" >Create New Auction</button>
+    </form>
+
+
+</div>
+
+
+
+{% endblock %}
