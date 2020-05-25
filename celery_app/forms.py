@@ -17,6 +17,9 @@ class BidUpForm(forms.ModelForm):
 
 
 class AuctionsForm(forms.ModelForm):
+
+    files = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False)
+
     class Meta:
         model = Auctions
         fields = ('title',
@@ -35,6 +38,9 @@ class AuctionsForm(forms.ModelForm):
             self.fields[field].widget.attrs['class'] = 'form-control'
             if field == 'start_auction':
                 self.fields[field].widget.input_type = 'date'
+            self.fields[field].widget.attrs['class'] = 'form-control'
+
+
 
 class AuthUserForm(AuthenticationForm, forms.ModelForm):
     class Meta:

@@ -12,10 +12,10 @@ class Auctions(models.Model):
     start_auction = models.DateField()
     sort_auction = models.IntegerField(blank = True)
     main_img = models.ImageField(upload_to='file', blank=True)
-#
-# class ImgForAuction(models.Model):
-#     auction = models.ForeignKey(Auctions, on_delete=models.CASCADE, blank=True)
-#     our_img = models.ImageField(upload_to='file', blank=True)
+
+class ImgForAuction(models.Model):
+    auction = models.ForeignKey(Auctions, on_delete=models.CASCADE, blank=True)
+    img = models.ImageField(upload_to='file', blank=True)
 
 
 class Bids(models.Model):

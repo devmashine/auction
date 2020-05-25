@@ -1,3 +1,5 @@
+
+
 {% extends 'base.html' %}
 
 
@@ -27,10 +29,34 @@ index
 {% for i in auctions_today %}
 
 
-<div class="card mb-3 col-md-8 main_cards" >
+<div class="card mb-3 p-3 col-md-10 main_cards" >
   <div class="row no-gutters">
     <div class="col-md-4">
-      <img src="{{ MEDIA_URL }}{{ i.main_img }}" class="card-img" alt="...">
+
+      <div id="owl-carousel_{{i.id}}" class="owl-carousel owl-theme">
+
+        <div class="item"> <img src="{{ MEDIA_URL }}{{ i.main_img }}" class="card-img" alt="..."></div>
+      
+      {% for img in additional_img %}
+          {% if img.auction_id == i.id %}
+              
+              <div class="item"> <img style="width: 100%;" src="{{ MEDIA_URL }}{{img.img}}" alt=""> </div>
+          {% endif %}
+      {% endfor %}
+
+        
+      </div>
+      
+      <script>
+          $('.owl-carousel').owlCarousel({
+              dots: false,
+              nav:true,
+              items:1,
+          })
+
+
+      </script>
+
     </div>
     <div class="col-md-8">
       <div class="card-body">
@@ -97,7 +123,7 @@ index
 {% for i in auctions_tomorrow %}
 
 
-<div class="card mb-3 col-md-8">
+<div class="card mb-3 col-md-10">
  <div class="row no-gutters">
    <div class="col-md-4">
      <img src="{{ MEDIA_URL }}{{ i.main_img }}" class="card-img" alt="...">
@@ -126,14 +152,23 @@ index
 {% for i in auctions_yesterday %}
 
 
-<div class="card mb-3 col-md-8">
+<div class="card mb-3 col-md-10">
  <div class="row no-gutters">
    <div class="col-md-4">
      <img src="{{ MEDIA_URL }}{{ i.main_img }}" class="card-img" alt="...">
    </div>
    <div class="col-md-8">
      <div class="card-body">
-       <h5 class="card-title">yesterday {{i.start_auction}}</h5>
+       <h5 class="card-title"> 
+         {% for w in winners %}
+         
+            {% if w.auction_id == i.id %}
+                winner: {{w.buyer_id}}
+            
+                
+            {% endif %}
+         {% endfor %}
+        </h5>
        <h5 class="card-title">{{i.title}} <small class="text-muted mr-3">Status: {{i.status}}</small><small class="text-muted mr-3">ID: {{i.id}}</small></h5>
        <p class="card-text">{{i.description}}</p>
         <p class="card-text"><small class="text-muted mr-3">Start auction: {{i.start_auction}}</small>

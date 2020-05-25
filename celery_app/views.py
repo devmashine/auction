@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 
 
 from django.contrib.auth.models import User, Group
-from .models import Auctions, Bids, Prices
+from .models import Auctions, Bids, Prices, ImgForAuction
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -17,6 +17,9 @@ from django.http import JsonResponse
 from django.forms.models import model_to_dict
 
 from django.views.decorators.csrf import csrf_exempt
+
+from django.core.files.base import ContentFile
+from io import BytesIO
 # Create your views here.
 
 import ast
@@ -40,8 +43,18 @@ class CreateAuction(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form_valid = super().form_valid(form)
-        new_price = form.cleaned_data['start_price']
-        print('new_price', new_price)
+
+        # Get and Save additional images
+        id = form.save().pk
+        auction = Auctions.objects.get(pk=id)
+        files = self.request.FILES.getlist('files')
+        if files:
+            for file in files:
+                fl = ImgForAuction(auction=auction, img = file)
+                print('fl', fl)
+                fl.save()
+
+
         
         return form_valid
 
@@ -98,8 +111,8 @@ class Index(View):
 
     def get(self, request):
 
-
-
+        winners = Prices.objects.filter(winner=1)
+        additional_img = ImgForAuction.objects.all() 
         groups_user_buyers = User.objects.filter(groups = 2)
         form = BidUpForm
         groups_user_sellers = User.objects.filter(groups = 1)
@@ -115,7 +128,9 @@ class Index(View):
 
         ctx ={
             'form': form,
+            'winners': winners,
             'current_user': current_user,
+            'additional_img': additional_img,
             'prices': prices,
             'auctions_today': auctions_today,
             'auctions_tomorrow': auctions_tomorrow,
