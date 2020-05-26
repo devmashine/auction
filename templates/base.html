@@ -38,7 +38,6 @@
 		<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
 
 
-
 			{% if user.is_authenticated %}
 				{% for i in groups_user_sellers %}
 
@@ -65,10 +64,10 @@
 
 					{% if user.is_authenticated %}
 
+						<a class="dropdown-item" href="{% url 'account_page' %}">Account</a>
+
 						<div class="dropdown-divider"></div>
 						<a class="dropdown-item" href="{% url 'logout' %}">LogOut</a>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="{% url 'account_page' %}">Account</a>
 					{% else %}
 
 						<a class="dropdown-item" href="{% url 'login' %}">LogIn</a>
@@ -100,6 +99,7 @@
 		{% endblock %}
 
 		</h1>
+
 	</div>
 
 	<div>

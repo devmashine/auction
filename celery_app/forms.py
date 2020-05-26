@@ -1,7 +1,25 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from .models import Auctions, Bids
+
+
+
+
+
+class ChangeUserData(UserCreationForm):
+
+
+    email = forms.EmailField(max_length=254, help_text='Это поле обязательно')
+    class Meta:
+        model = User
+        fields = (
+            'username',
+            'email',
+        )
+
+
+
 
 class BidUpForm(forms.ModelForm):
     class Meta:
@@ -75,3 +93,27 @@ class RegisterUserForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+
+
+# class RegisterUserForm(forms.ModelForm):
+#     class Meta:
+#         model = User
+#         fields = ('username', 'password', 'email', 'groups')
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         for field in self.fields:
+#             self.fields[field].widget.attrs['class'] = 'form-control'
+#             if field == 'password':
+#                 self.fields[field].widget.input_type = 'password'
+#             if field == 'email':
+#                 self.fields[field].widget.attrs['required'] = True
+#             if field == 'groups':
+#                 self.fields[field].widget.attrs['required'] = True
+#     def save(self, commit=True):
+#         user = super().save(commit=False)
+#         user.set_password(self.cleaned_data["password"])
+#         if commit:
+#             user.save()
+#         return user

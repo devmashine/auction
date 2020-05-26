@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic.base import View
-from .forms import RegisterUserForm, AuctionsForm, BidUpForm
+from .forms import RegisterUserForm, AuctionsForm, BidUpForm, ChangeUserData
 
 from django.views.generic import CreateView
 
@@ -28,16 +28,53 @@ import datetime
 
 
 class Account_page(View):
+
+    def post(self, request):
+        pass
+
+
     def get(self, request):
 
+        form = ChangeUserData
+
+        # get it for menu link
+        groups_user_sellers = User.objects.filter(groups = 1)
+
+        
         user_data= User.objects.filter(id = self.request.user.id)
 
         user_auctions = Auctions.objects.filter(seller = self.request.user)
 
+        # count the bids at auction
+        bids = []
+        winners = []
+        count_bid = 0
+        for auction in user_auctions:
+            number_of_bids = Bids.objects.filter(auction = auction)
+            winner_buyer = Prices.objects.filter(auction = auction).filter(winner = 1)
+            for bid in number_of_bids:
+                # print('bid', bid.bid, bid.auction.id )
+                count_bid +=1
 
+        
+            bids.append({auction.id: count_bid})
+            count_bid =0
+
+
+            for winner in winner_buyer:
+                
+                winners.append({winner.auction_id : 
+                    {winner.new_price: winner.buyer_id}
+                })
+        print('winner', winners)
+        
         ctx = {
+            'form': form,
             'user_data': user_data,
+            'bids': bids,
+            'winners': winners,
             'user_auctions': user_auctions,
+            'groups_user_sellers': groups_user_sellers,
         }
         return render (request, 'account_page.html', ctx)
 

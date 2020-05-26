@@ -34,6 +34,7 @@
     margin: 0 auto;
     padding: 45px 0;
     display: block;
+    max-height: 70%;
 }
 
 
@@ -45,3 +46,15 @@
     top: 5%;
     cursor: pointer;
 }
+
+
+.table_img {
+    width: 100px;
+}
+
+
+
+
+
+
+
