@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+
+{% block title %}
+Account page
+{% endblock %}
+
+
+{% block content_title %}
+welcome 
+
+{% for user in user_data %}
+    {{user.username}}
+{% endfor %}
+
+{% endblock %}
+
+{% block content %}
+
+your auctions:
+
+
+{% for auctuon in user_auctions %}
+    
+    <p>{{auctuon.title}}</p>
+{% endfor %}
+
+
+{% endblock %}

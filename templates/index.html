@@ -25,6 +25,11 @@ index
 <p>groups_user_buyers: {{groups_user_buyers}}</p>
 <p>groups_user_sellers: {{groups_user_sellers}}</p>
 
+<div id="pop_up">
+
+  <span id="close_popup">close</span>
+</div>
+
 <div id="main_cards" >
 {% for i in auctions_today %}
 
@@ -35,12 +40,12 @@ index
 
       <div id="owl-carousel_{{i.id}}" class="owl-carousel owl-theme">
 
-        <div class="item"> <img src="{{ MEDIA_URL }}{{ i.main_img }}" class="card-img" alt="..."></div>
+        <div class="item" onclick="imgSliderEvent(event)" > <img id="img_{{i.id}}" src="{{ MEDIA_URL }}{{ i.main_img }}" class="card-img" alt="..."> </div>
       
       {% for img in additional_img %}
           {% if img.auction_id == i.id %}
               
-              <div class="item"> <img style="width: 100%;" src="{{ MEDIA_URL }}{{img.img}}" alt=""> </div>
+              <div class="item" onclick="imgSliderEvent(event)"> <img class="slider_img" id="img_{{i.id}}" src="{{ MEDIA_URL }}{{img.img}}" alt="">  </div>
           {% endif %}
       {% endfor %}
 
@@ -130,7 +135,7 @@ index
    </div>
    <div class="col-md-8">
      <div class="card-body">
-       <h5 class="card-title">{{i.start_auction}}</h5>
+       <h5 class="card-title">Next Auctions: {{i.start_auction}}</h5>
        <h5 class="card-title">{{i.title}} <small class="text-muted mr-3">Status: {{i.status}}</small><small class="text-muted mr-3">ID: {{i.id}}</small></h5>
        <p class="card-text">{{i.description}}</p>
         <p class="card-text"><small class="text-muted mr-3">Start auction: {{i.start_auction}}</small>
@@ -163,7 +168,7 @@ index
          {% for w in winners %}
          
             {% if w.auction_id == i.id %}
-                winner: {{w.buyer_id}}
+                Closed. Winner: {{w.buyer_id}}
             
                 
             {% endif %}

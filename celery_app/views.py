@@ -26,6 +26,25 @@ import ast
 
 import datetime
 
+
+class Account_page(View):
+    def get(self, request):
+
+        user_data= User.objects.filter(id = self.request.user.id)
+
+        user_auctions = Auctions.objects.filter(seller = self.request.user)
+
+
+        ctx = {
+            'user_data': user_data,
+            'user_auctions': user_auctions,
+        }
+        return render (request, 'account_page.html', ctx)
+
+
+
+
+
 class CreateAuction(LoginRequiredMixin, CreateView):
     model = Auctions
     template_name = 'create_auction.html'
