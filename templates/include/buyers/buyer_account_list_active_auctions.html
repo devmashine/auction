@@ -1,0 +1,79 @@
+
+
+<table class="table table-striped">
+  <thead>
+      <tr>
+      <th scope="col">Auctions</th>
+      <th scope="col">Photo</th>
+      <th scope="col">start price</th>
+      <th scope="col">end price</th>
+      <th scope="col">Winner contacts</th>
+      </tr>
+  </thead>
+  <tbody>
+      
+          
+  {% for obj in buyer_winner_auctions %}
+          
+      {% for auction, bid in obj.items %}
+ 
+          {% if auction.status == 2%}
+
+          <tr>
+              <th scope="row">
+                  <ul class="nav flex-column">
+                      <li class="nav-item">
+                      <p class="nav-p active" >{{auction.title}}</p>
+                      </li>
+                      <li class="nav-item">
+                      <p class="nav-p active" >{{auction.id}}</p>
+                      </li>
+                      <li class="nav-item">
+                      <p class="nav-p active" >{{auction.start_auction}}</p>
+                      </li>
+                  </ul>
+              </th>
+              <td> <img class="table_img" src="{{ MEDIA_URL }}{{auction.main_img}}" alt=""> </td>
+              <td>{{auction.start_price}}</td>
+              
+              <td>{{bid}}</td>
+                           
+              <td>
+              <ul class="nav flex-column">
+                  <li class="nav-item">
+                  <p class="nav-p active" >Name: {{auction.seller}}</p>
+                  </li>
+                  <li class="nav-item">
+                  <p class="nav-p active" >Email: {{auction.seller.email}}</p>
+                  </li>
+              </ul>
+              </td>            
+          </tr>
+
+          {% endif %}
+      {% endfor %}
+      {% endfor %}
+
+      </div>
+  </div>
+
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  
+              

@@ -5,6 +5,7 @@ from .views import Index, CreateAuction, RegisterUserView, Account_page
 from django.conf.urls.static import static
 from celery_proj.settings import MEDIA_URL, MEDIA_ROOT
 
+
 urlpatterns = [
     re_path(r'^$', Index.as_view(), name='index'),
 
@@ -14,4 +15,5 @@ urlpatterns = [
     url('register', RegisterUserView.as_view(), name='register_page'),
 
     path('accounts/', include('django.contrib.auth.urls')),
+    path('silk/', include('silk.urls', namespace='silk')),
 ] + static(MEDIA_URL, document_root=MEDIA_ROOT)

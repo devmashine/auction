@@ -1,0 +1,46 @@
+
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Auctions</th>
+                <th scope="col">Photo</th>
+                <th scope="col">start price</th>
+                <th scope="col">Start date</th>
+                <th scope="col">status</th>
+              </tr>
+            </thead>
+            <tbody>
+        
+        
+        
+        
+        {% for auction in user_seller_auctions %}
+            
+            {% if auction.status == 2 or auction.status == 1%}
+                <tr>
+                    <th scope="row">{{auction.title}} : {{auction.id}}</th>
+                    <td> <img class="table_img" src="{{ MEDIA_URL }}{{auction.main_img}}" alt=""> </td>
+                    <td>{{auction.start_price}}</td>
+                
+
+                        <td>{{auction.start_auction}}</td>
+
+                        <td>
+                            {% if auction.status == 2%}
+                                open lot
+                            {% elif auction.status == 1 %}
+                                waiting start
+                            {% endif %}
+                        </td>
+                        
+                    
+                
+                    </tr>
+            
+            {% endif %}
+        {% endfor %}
+
+        
+</tbody>
+</table>
+

@@ -22,7 +22,27 @@ New User registration
 
     <form id="add_form" method="POST">
         {% csrf_token %}
-        {{form}}
+        <!-- {{form}} -->
+
+
+
+        {{form.username.label}}
+        {{form.username}}
+        {{form.email.label}}
+        {{form.email}}
+        <label for="id_groups">Groups:</label>
+        <select name="groups" class="form-control" ="" id="id_groups">
+            <option value="1">sellers</option>
+            <option value="2">buyers</option>
+          
+          </select>
+
+        {{form.password1.label}}
+        {{form.password1}}
+        {{form.password2.label}}
+        {{form.password2}}
+
+
         <button form="add_form" type="submit" class="btn btn-primary mt-4" >Create New User</button>
     </form>
     

@@ -22,60 +22,124 @@ from django.core.files.base import ContentFile
 from io import BytesIO
 # Create your views here.
 
-import ast
+from django.shortcuts import get_object_or_404
 
+import ast
 import datetime
+
+
 
 
 class Account_page(View):
 
     def post(self, request):
-        pass
+        form = ChangeUserData(request.POST)
 
+        if form.is_valid():
+            print('valid change data form')
+
+            user_data_form = get_object_or_404(User, id =request.user.id)
+
+            name = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            user_data_form.username = name
+            user_data_form.email = email
+
+            user_data_form.save()
+
+            return redirect ('account_page')
 
     def get(self, request):
 
-        form = ChangeUserData
+
+        user_data_form = get_object_or_404(User, id =request.user.id)
+        form = ChangeUserData(instance = user_data_form)
+        
 
         # get it for menu link
         groups_user_sellers = User.objects.filter(groups = 1)
 
+        # get it for menu link
+        groups_user_buyers = User.objects.filter(groups = 2)
+
+
+
+
+
+
+
+        # render for Sellers
+        for i in groups_user_sellers:
+            if self.request.user.id == i.id:
+                print('account seller')
+
+                user_seller_auctions = Auctions.objects.filter(seller = self.request.user).order_by('-start_auction')
         
-        user_data= User.objects.filter(id = self.request.user.id)
-
-        user_auctions = Auctions.objects.filter(seller = self.request.user)
-
-        # count the bids at auction
-        bids = []
-        winners = []
-        count_bid = 0
-        for auction in user_auctions:
-            number_of_bids = Bids.objects.filter(auction = auction)
-            winner_buyer = Prices.objects.filter(auction = auction).filter(winner = 1)
-            for bid in number_of_bids:
-                # print('bid', bid.bid, bid.auction.id )
-                count_bid +=1
-
-        
-            bids.append({auction.id: count_bid})
-            count_bid =0
 
 
-            for winner in winner_buyer:
+
+
+
+                # count the bids at auction
+                bids = []
+                winners = []
+                count_bid = 0
+                for auction in user_seller_auctions:
+                    number_of_bids = Bids.objects.filter(auction = auction)
+                    winner_buyer = Prices.objects.filter(auction = auction).filter(winner = 1)
+                    for bid in number_of_bids:
+                        # print('bid', bid.bid, bid.auction.id )
+                        count_bid +=1
+
                 
-                winners.append({winner.auction_id : 
-                    {winner.new_price: winner.buyer_id}
-                })
-        print('winner', winners)
+                    bids.append({auction.id: count_bid})
+                    count_bid =0
+
+
+                    for winner in winner_buyer:
+                        
+                        winners.append({winner.auction_id : 
+                            {winner.new_price: winner.buyer_id}
+                        })
+                ctx = {
+                    'form': form,
+                    'groups_user_sellers': groups_user_sellers,
+
+                    'bids': bids,
+                    'winners': winners,
+                    'user_seller_auctions': user_seller_auctions,
+
+                    
+                }
+
+        # render for Buyers
+        for i in groups_user_buyers:
+            if self.request.user.id == i.id:
+                print('account buyer')
         
-        ctx = {
-            'form': form,
-            'user_data': user_data,
-            'bids': bids,
-            'winners': winners,
-            'user_auctions': user_auctions,
-            'groups_user_sellers': groups_user_sellers,
-        }
+                user_buyer_win_auctions_id = Prices.objects.filter(buyer_id = self.request.user).filter(winner = 1)
+
+                user_buyer_auctions_id = Prices.objects.filter(buyer_id = self.request.user)
+
+                buyer_winner_auctions = []
+                for i in user_buyer_win_auctions_id:
+                    auctions_winner_id = i.auction_id
+                    auctions_winner_bid = i.new_price
+
+                    auctions_winner_obj = Auctions.objects.get(id = auctions_winner_id)
+                    if auctions_winner_obj.status:
+                        buyer_winner_auctions.append({auctions_winner_obj: auctions_winner_bid})
+
+
+                
+                ctx = {
+                    'form': form,
+                    'groups_user_sellers': groups_user_sellers,
+                    'groups_user_buyers': groups_user_buyers,
+
+                    'user_buyer_win_auctions_id': user_buyer_win_auctions_id,
+                    'buyer_winner_auctions': buyer_winner_auctions,
+                }
         return render (request, 'account_page.html', ctx)
 
 
@@ -223,7 +287,7 @@ class RegisterUserView(CreateView):
     def form_valid(self, form):
         form_valid = super().form_valid(form)
         username = form.cleaned_data["username"]
-        password = form.cleaned_data["password"]
+        password = form.cleaned_data["password1"]
         group = form.cleaned_data["groups"]
         auth_user = authenticate(username=username, password=password)
         login(self.request, auth_user)
@@ -233,3 +297,29 @@ class RegisterUserView(CreateView):
         print('User.id', self.request.user.id)
         my_group.user_set.add(self.request.user.id)
         return form_valid
+
+
+
+
+
+# class RegisterUserView(CreateView):
+#     model = User
+#     template_name = 'register_user.html'
+#     form_class = RegisterUserForm
+#     success_url = reverse_lazy('index')
+#     success_msg = 'User was created'
+
+
+#     def form_valid(self, form):
+#         form_valid = super().form_valid(form)
+#         username = form.cleaned_data["username"]
+#         password = form.cleaned_data["password"]
+#         group = form.cleaned_data["groups"]
+#         auth_user = authenticate(username=username, password=password)
+#         login(self.request, auth_user)
+
+#         group_id = group[0].id
+#         my_group = Group.objects.get(id = group_id)
+#         print('User.id', self.request.user.id)
+#         my_group.user_set.add(self.request.user.id)
+#         return form_valid
